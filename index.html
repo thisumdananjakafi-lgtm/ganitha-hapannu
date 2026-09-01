@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="google-site-verification" content="B9qMPNzqLXmxmUyGxuHrKvI7DH2aRskN7uHKwB9leI4" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23FF6B4A'/%3E%3Cpath d='M32 16 L54 26 L32 36 L10 26 Z' fill='%23FBF3E1'/%3E%3Cpath d='M20 30 V42 C20 45 26 48 32 48 C38 48 44 45 44 42 V30' stroke='%23FBF3E1' stroke-width='3' fill='none'/%3E%3Cline x1='54' y1='26' x2='54' y2='40' stroke='%23FBF3E1' stroke-width='3'/%3E%3C/svg%3E">
+<title>ගණිත හපන්නු | Known Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@500;600;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root{
+    --bg-deep:#0B4F4A;
+    --bg-deep2:#0E615A;
+    --sand:#FBF3E1;
+    --sand2:#F3E6C8;
+    --mango:#FFB100;
+    --mango-dark:#E89600;
+    --coral:#FF6B4A;
+    --coral-dark:#E5502F;
+    --leaf:#3FA34D;
+    --leaf-dark:#2C8038;
+    --ink:#163832;
+    --ink-soft:#3E6660;
+    --white:#FFFFFF;
+    --star-gray:#D9CBB0;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Noto Sans Sinhala','Segoe UI',sans-serif;
+    background:var(--bg-deep);
+    color:var(--ink);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Baloo Tamma 2','Noto Sans Sinhala',sans-serif;
+    font-weight:700;
+    margin:0;
+  }
+  button{font-family:inherit; cursor:pointer; border:none;}
+  .screen{
+    min-height:100vh;
+    width:100%;
+    display:none;
+    flex-direction:column;
+    position:relative;
+  }
+  .screen.active{display:flex;}
+
+  /* ---------- decorative background ---------- */
+  .bg-waves{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 600px 300px at 15% 8%, rgba(255,177,0,0.14), transparent 60%),
+      radial-gradient(ellipse 500px 400px at 90% 85%, rgba(255,107,74,0.12), transparent 60%),
+      linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-deep2) 100%);
+  }
+
+  /* ---------- START SCREEN ---------- */
+  #start{
+    align-items:center; justify-content:center; text-align:center;
+    padding:32px 20px; position:relative; z-index:1;
+  }
+  .logo-badge{
+    width:132px; height:132px; margin-bottom:18px;
+    filter:drop-shadow(0 8px 18px rgba(0,0,0,0.35));
+  }
+  .title-main{
+    font-size:2.6rem; color:var(--mango); line-height:1.05;
+    text-shadow:0 3px 0 rgba(0,0,0,0.25);
+  }
+  .title-sub{
+    color:var(--sand); font-size:1rem; margin-top:10px; opacity:0.9;
+    font-family:'Noto Sans Sinhala',sans-serif; font-weight:500;
+  }
+  .start-card{
+    background:var(--sand);
+    border-radius:28px;
+    padding:22px 26px;
+    margin-top:30px;
+    max-width:340px;
+    box-shadow:0 14px 0 rgba(0,0,0,0.18);
+  }
+  .start-card p{
+    font-size:0.92rem; color:var(--ink-soft); line-height:1.6; margin:0 0 16px 0;
+  }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:16px 34px;
+    border-radius:18px;
+    font-family:'Baloo Tamma 2',sans-serif;
+    font-weight:700;
+    font-size:1.15rem;
+    transition:transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow:0 6px 0 var(--mango-dark);
+    background:var(--mango);
+    color:var(--ink);
+  }
+  .btn:active{transform:translateY(5px); box-shadow:0 1px 0 var(--mango-dark);}
+  .btn-coral{background:var(--coral); box-shadow:0 6px 0 var(--coral-dark); color:var(--white);}
+  .btn-coral:active{box-shadow:0 1px 0 var(--coral-dark);}
+  .btn-leaf{background:var(--leaf); box-shadow:0 6px 0 var(--leaf-dark); color:var(--white);}
+  .btn-leaf:active{box-shadow:0 1px 0 var(--leaf-dark);}
+  .btn-ghost{
+    background:transparent; color:var(--sand);
+    box-shadow:none; border:2px solid rgba(251,243,225,0.4);
+    padding:12px 26px; font-size:0.95rem;
+  }
+  .studio-credit{
+    position:absolute; bottom:16px; left:0; right:0; text-align:center;
+    font-size:0.7rem; letter-spacing:0.5px; color:rgba(251,243,225,0.55);
+    font-family:'Noto Sans Sinhala',sans-serif;
+  }
+
+  /* ---- language switcher ---- */
+  .lang-switch{
+    position:absolute; top:16px; right:16px; z-index:6;
+    display:flex; background:rgba(0,0,0,0.28); border-radius:999px; padding:4px;
+    gap:2px;
+  }
+  .lang-switch button{
+    background:transparent; color:rgba(251,243,225,0.65);
+    font-family:'Baloo Tamma 2',sans-serif; font-weight:700; font-size:0.78rem;
+    padding:6px 11px; border-radius:999px;
+  }
+  .lang-switch button.active{background:var(--mango); color:var(--ink);}
+
+  /* ---- Edu Pab brand lockup ---- */
+  .edupab-brand{
+    display:flex; align-items:center; gap:8px; margin-bottom:6px; opacity:0.95;
+  }
+  .edupab-brand svg{width:30px; height:30px;}
+  .edupab-brand span{
+    font-family:'Baloo Tamma 2',sans-serif; font-weight:700; font-size:1.05rem; color:var(--sand);
+    letter-spacing:0.3px;
+  }
+
+  /* ---- hamburger menu (bottom-left of login screen) ---- */
+  .menu-btn{
+    position:absolute; bottom:16px; left:16px; z-index:6;
+    width:44px; height:44px; border-radius:14px;
+    background:rgba(0,0,0,0.28); display:flex; align-items:center; justify-content:center;
+  }
+  .menu-btn svg{width:20px; height:20px;}
+  .menu-popover{
+    position:absolute; bottom:66px; left:16px; z-index:7;
+    background:var(--sand); border-radius:16px; padding:8px;
+    box-shadow:0 10px 26px rgba(0,0,0,0.35);
+    min-width:190px; display:none; flex-direction:column;
+  }
+  .menu-popover.show{display:flex;}
+  .menu-popover button, .menu-popover a{
+    background:transparent; text-align:left; padding:11px 12px; border-radius:10px;
+    font-family:'Noto Sans Sinhala',sans-serif; font-size:0.88rem; color:var(--ink); font-weight:500;
+    display:flex; align-items:center; gap:9px; text-decoration:none; border:none; cursor:pointer;
+  }
+  .menu-popover button:active, .menu-popover a:active{background:var(--sand2);}
+  .menu-popover button svg, .menu-popover a svg{width:16px; height:16px; flex-shrink:0; opacity:0.7;}
+
+  /* ---- footer credit strip ---- */
+  .credit-strip{
+    position:static; margin:28px 0 64px; text-align:center; padding:0 20px;
+  }
+  .credit-row{
+    display:flex; flex-direction:column; align-items:center;
+    gap:7px; margin-bottom:10px;
+  }
+  .credit-item{
+    display:flex; align-items:center; gap:6px;
+    font-size:0.75rem; letter-spacing:0.2px; color:rgba(251,243,225,0.7);
+    font-family:'Noto Sans Sinhala',sans-serif; font-weight:600;
+  }
+  .copyright-line{
+    font-size:0.68rem; color:rgba(251,243,225,0.5); font-family:'Noto Sans Sinhala',sans-serif;
+  }
+
+  /* ---- legal / contact pages ---- */
+  .page-wrap{padding:18px 20px 40px; position:relative; z-index:1; max-width:520px; margin:0 auto; width:100%;}
+  .page-top{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+  .page-top h2{color:var(--mango); font-size:1.25rem;}
+  .legal-card{
+    background:var(--sand); border-radius:22px; padding:22px 20px;
+    box-shadow:0 10px 0 rgba(0,0,0,0.18);
+  }
+  .legal-card h3{font-size:1rem; color:var(--ink); margin-bottom:8px;}
+  .legal-card p{font-size:0.86rem; line-height:1.65; color:var(--ink-soft); margin:0 0 14px 0;}
+  .legal-card p:last-child{margin-bottom:0;}
+  .contact-field{margin-bottom:14px;}
+  .contact-field label{
+    display:block; font-size:0.8rem; font-weight:600; color:var(--ink-soft); margin-bottom:6px;
+  }
+  .contact-field input, .contact-field textarea{
+    width:100%; border:2px solid var(--sand2); border-radius:14px; padding:12px 14px;
+    font-family:'Noto Sans Sinhala',sans-serif; font-size:0.92rem; color:var(--ink);
+    background:var(--white); resize:vertical;
+  }
+  .contact-field textarea{min-height:110px;}
+  .contact-status{
+    font-size:0.82rem; margin-top:10px; min-height:18px; font-weight:600;
+  }
+  .contact-status.ok{color:var(--leaf-dark);}
+  .contact-status.no{color:var(--coral-dark);}
+  .contact-status.pending{color:var(--ink-soft);}
+
+  .auth-note{
+    font-size:0.72rem; color:var(--ink-soft); opacity:0.85; margin-top:10px; line-height:1.5;
+  }
+  .btn-google{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    width:100%; padding:14px 20px; border-radius:16px;
+    background:var(--white); color:#3c4043; font-weight:600;
+    font-family:'Noto Sans Sinhala',sans-serif; font-size:0.95rem;
+    box-shadow:0 4px 0 #d8d8d8; border:1px solid #dadce0;
+  }
+  .btn-google:active{transform:translateY(3px); box-shadow:0 1px 0 #d8d8d8;}
+  .btn-google svg{width:20px;height:20px;}
+  .divider-row{display:flex; align-items:center; gap:10px; margin:16px 0; color:var(--ink-soft); font-size:0.8rem;}
+  .divider-row::before, .divider-row::after{content:''; flex:1; height:1px; background:var(--sand2);}
+  .sync-badge{
+    display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.22);
+    border-radius:999px; padding:6px 12px 6px 6px; color:var(--sand); font-size:0.82rem; font-weight:600;
+  }
+  .sync-badge img{width:26px; height:26px; border-radius:50%;}
+  .sync-badge button{background:transparent; color:rgba(251,243,225,0.7); font-size:0.72rem; text-decoration:underline;}
+  .sync-status{
+    text-align:center; font-size:0.75rem; color:var(--sand); opacity:0.75; padding:0 20px 6px;
+    min-height:16px;
+  }
+
+  /* ---------- MAP SCREEN ---------- */
+  #map{padding-bottom:40px; position:relative; z-index:1;}
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 18px;
+    position:sticky; top:0; z-index:5;
+    background:linear-gradient(180deg, var(--bg-deep) 70%, transparent);
+  }
+  .stat-pill{
+    display:flex; align-items:center; gap:6px;
+    background:rgba(0,0,0,0.22);
+    border-radius:999px; padding:8px 14px;
+    color:var(--sand); font-weight:700; font-family:'Baloo Tamma 2',sans-serif;
+    font-size:1rem;
+  }
+  .map-title{
+    text-align:center; padding:6px 20px 18px;
+  }
+  .map-title h1{color:var(--mango); font-size:1.6rem;}
+  .map-title p{color:var(--sand); font-size:0.85rem; margin-top:4px; opacity:0.85;}
+
+  .path-wrap{position:relative; max-width:460px; margin:0 auto; padding:0 10px;}
+  .path-svg{position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;}
+  .nodes-col{position:relative; z-index:1; display:flex; flex-direction:column; gap:0;}
+  .node-row{display:flex; align-items:center; min-height:150px;}
+  .node-row.left{justify-content:flex-start; padding-left:8%;}
+  .node-row.right{justify-content:flex-end; padding-right:8%;}
+
+  .node{
+    width:92px; height:92px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    background:var(--star-gray);
+    box-shadow:0 6px 0 rgba(0,0,0,0.25);
+    transition:transform .15s ease;
+  }
+  .node:active{transform:scale(0.94);}
+  .node.unlocked{background:var(--mango); box-shadow:0 6px 0 var(--mango-dark);}
+  .node.done{background:var(--leaf); box-shadow:0 6px 0 var(--leaf-dark);}
+  .node.locked{opacity:0.75;}
+  .node svg{width:46px; height:46px;}
+  .node-num{
+    position:absolute; top:-8px; left:-8px;
+    width:26px; height:26px; border-radius:50%;
+    background:var(--ink); color:var(--sand);
+    font-family:'Baloo Tamma 2',sans-serif; font-weight:700; font-size:0.8rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .node-label{
+    position:absolute; bottom:-24px; left:50%; transform:translateX(-50%);
+    white-space:nowrap; font-size:0.75rem; color:var(--sand); font-weight:600;
+    background:rgba(0,0,0,0.28); padding:2px 10px; border-radius:10px;
+  }
+  .node-stars{
+    position:absolute; bottom:-8px; left:50%; transform:translateX(-50%);
+    display:flex; gap:1px; background:var(--white); border-radius:10px; padding:2px 6px;
+    box-shadow:0 2px 0 rgba(0,0,0,0.15);
+  }
+  .node-stars svg{width:13px; height:13px;}
+  .lock-icon{width:30px; height:30px; opacity:0.8;}
+
+  .mascot-float{
+    position:absolute; width:64px; height:64px; z-index:2;
+    filter:drop-shadow(0 6px 8px rgba(0,0,0,0.3));
+    animation:bob 2.4s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+  /* ---------- LEVEL / QUIZ SCREEN ---------- */
+  #level{padding:0; position:relative; z-index:1;}
+  .lvl-top{
+    display:flex; align-items:center; gap:12px; padding:16px 18px;
+  }
+  .icon-btn{
+    width:42px; height:42px; border-radius:50%; background:rgba(0,0,0,0.25);
+    display:flex; align-items:center; justify-content:center; color:var(--sand); flex-shrink:0;
+  }
+  .icon-btn svg{width:20px;height:20px;}
+  .progress-track{
+    flex:1; height:14px; background:rgba(0,0,0,0.25); border-radius:999px; overflow:hidden;
+  }
+  .progress-fill{height:100%; background:var(--mango); border-radius:999px; transition:width .3s ease;}
+  .coin-tally{
+    display:flex; align-items:center; gap:5px; color:var(--mango); font-family:'Baloo Tamma 2',sans-serif; font-weight:700; flex-shrink:0;
+  }
+  .coin-tally svg{width:20px;height:20px;}
+
+  .quiz-card{
+    background:var(--sand); margin:8px 18px 24px;
+    border-radius:26px; padding:26px 22px 24px;
+    box-shadow:0 10px 0 rgba(0,0,0,0.2);
+    max-width:420px; margin-left:auto; margin-right:auto;
+  }
+  .quiz-topic-tag{
+    display:inline-block; background:var(--coral); color:var(--white);
+    font-size:0.72rem; font-weight:700; padding:4px 12px; border-radius:999px;
+    margin-bottom:14px; font-family:'Baloo Tamma 2',sans-serif;
+  }
+  .quiz-q{
+    font-size:1.18rem; line-height:1.55; color:var(--ink); font-weight:600; margin-bottom:20px;
+  }
+  .quiz-options{display:flex; flex-direction:column; gap:12px;}
+  .opt-btn{
+    text-align:left; background:var(--white); border-radius:16px;
+    padding:14px 16px; font-size:1.02rem; color:var(--ink); font-weight:500;
+    border:3px solid transparent; box-shadow:0 4px 0 rgba(0,0,0,0.08);
+    display:flex; align-items:center; gap:12px; transition:transform .1s ease;
+  }
+  .opt-btn:active{transform:scale(0.98);}
+  .opt-letter{
+    width:28px; height:28px; border-radius:50%; background:var(--sand2);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    font-family:'Baloo Tamma 2',sans-serif; font-weight:700; font-size:0.85rem; color:var(--ink-soft);
+  }
+  .opt-btn.correct{border-color:var(--leaf); background:#E9F7EC;}
+  .opt-btn.correct .opt-letter{background:var(--leaf); color:var(--white);}
+  .opt-btn.wrong{border-color:var(--coral); background:#FFEBE6;}
+  .opt-btn.wrong .opt-letter{background:var(--coral); color:var(--white);}
+  .opt-btn.disabled{pointer-events:none;}
+
+  .feedback-box{
+    margin-top:18px; padding:14px 16px; border-radius:16px;
+    font-size:0.92rem; line-height:1.5; display:none; font-weight:500;
+  }
+  .feedback-box.show{display:block;}
+  .feedback-box.ok{background:#E9F7EC; color:var(--leaf-dark);}
+  .feedback-box.no{background:#FFEBE6; color:var(--coral-dark);}
+  .next-wrap{margin-top:18px; display:none;}
+  .next-wrap.show{display:block;}
+
+  /* ---------- LEVEL COMPLETE ---------- */
+  #complete{align-items:center; justify-content:center; text-align:center; padding:30px 20px; position:relative; z-index:1;}
+  .stars-big{display:flex; gap:10px; margin:20px 0;}
+  .stars-big svg{width:56px; height:56px;}
+  .complete-card{
+    background:var(--sand); border-radius:28px; padding:30px 26px; max-width:340px;
+    box-shadow:0 14px 0 rgba(0,0,0,0.18);
+  }
+  .complete-msg{font-size:1.05rem; color:var(--ink-soft); margin:14px 0 8px; line-height:1.6;}
+  .coins-earned{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    font-family:'Baloo Tamma 2',sans-serif; font-weight:700; color:var(--mango-dark); font-size:1.3rem; margin-bottom:6px;
+  }
+  .coins-earned svg{width:26px;height:26px;}
+  .btn-row{display:flex; flex-direction:column; gap:12px; margin-top:20px;}
+
+  ::selection{background:var(--mango); color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="bg-waves"></div>
+
+<!-- ============ START SCREEN ============ -->
+<div class="screen active" id="start">
+
+  <div class="lang-switch">
+    <button data-lang="si" onclick="setLang('si')">සිං</button>
+    <button data-lang="ta" onclick="setLang('ta')">த</button>
+    <button data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
+
+  <div class="edupab-brand">
+    <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#FFB100"/><path d="M8 12l8-4 8 4-8 4-8-4z" fill="#0B4F4A"/><path d="M11 15v5c0 1.5 2.2 3 5 3s5-1.5 5-3v-5" stroke="#0B4F4A" stroke-width="1.6" fill="none"/><line x1="24" y1="13" x2="24" y2="19" stroke="#0B4F4A" stroke-width="1.6"/></svg>
+    <span>Edu Pab</span>
+  </div>
+
+  <svg class="logo-badge" viewBox="0 0 120 120">
+    <circle cx="60" cy="60" r="58" fill="#FFB100" stroke="#E89600" stroke-width="4"/>
+    <ellipse cx="60" cy="78" rx="34" ry="9" fill="rgba(0,0,0,0.08)"/>
+    <path d="M60 30 Q40 30 34 48 Q30 60 40 66 Q34 74 42 82 Q52 90 60 82 Q68 90 78 82 Q86 74 80 66 Q90 60 86 48 Q80 30 60 30Z" fill="#0B4F4A"/>
+    <circle cx="50" cy="50" r="4" fill="#FBF3E1"/>
+    <circle cx="70" cy="50" r="4" fill="#FBF3E1"/>
+    <path d="M48 62 Q60 70 72 62" stroke="#FBF3E1" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  </svg>
+  <h1 class="title-main" data-i18n="gameName">ගණිත හපන්නු</h1>
+  <p class="title-sub" data-i18n="subtitle">5 වසර ශිෂ්‍යත්ව ගණිත ක්‍රීඩාව</p>
+
+  <div class="start-card">
+    <p data-i18n="introText">ලේවල් 10ක් හරහා ගණිත මාතෘකා පුහුණු වෙලා, තරු එකතු කරලා, ශිෂ්‍යත්ව විභාගයට සූදානම් වෙන්න!</p>
+    <button class="btn-google" onclick="handleGoogleSignIn()">
+      <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5h-1.9V20H24v8h11.3c-1.6 4.7-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6 29.5 4 24 4c-7.4 0-13.7 4.1-17 10.1z"/><path fill="#4CAF50" d="M24 44c5.3 0 10.2-2 13.8-5.4l-6.4-5.4C29.4 34.8 26.8 36 24 36c-5.3 0-9.7-3.3-11.3-8l-6.5 5C9.2 39.5 16 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H24v8h11.3c-.8 2.3-2.2 4.2-4 5.6l6.4 5.4C41.3 36.4 44 30.7 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
+      <span data-i18n="googleBtn">Google ගිණුමෙන් පටන් ගමු</span>
+    </button>
+    <p class="auth-note" data-i18n="authNote">👪 දෙමව්පියන්ගේ අවසරයෙන් පමණක් Google ගිණුම භාවිත කරන්න. ප්‍රගතිය ඔයාගේම Google Drive එකේ (රහසිගතව) save වේ.</p>
+    <div class="divider-row" data-i18n="orText">හෝ</div>
+    <button class="btn" style="width:100%" onclick="goTo('map'); renderMap();">
+      <span data-i18n="guestBtn">🎮 Guest විදියට පටන් ගමු</span>
+    </button>
+    <p class="auth-note" data-i18n="guestNote">Guest mode එකේදී ප්‍රගතිය මේ device එකේ විතරයි save වෙන්නේ.</p>
+  </div>
+
+  <div class="credit-strip">
+    <div class="credit-row">
+      <span class="credit-item">🎨 Design by Known Studio</span>
+      <span class="credit-item">🛡️ Security by Cloudflare</span>
+      <span class="credit-item">☁️ Storage by Google Drive</span>
+    </div>
+    <div class="copyright-line" data-i18n="copyrightLine">© 2026 Edu Pab. සියලු හිමිකම් ඇවිරිණි.</div>
+  </div>
+
+  <button class="menu-btn" onclick="toggleMenu()">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="#FBF3E1" stroke-width="2.2" stroke-linecap="round"/></svg>
+  </button>
+  <div class="menu-popover" id="menuPopover">
+    <a href="/terms.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l3 3v15H6V3z" stroke="currentColor" stroke-width="1.6"/><path d="M9 10h6M9 14h6" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span data-i18n="menuTerms">Terms of Service</span>
+    </a>
+    <a href="/privacy.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span data-i18n="menuPrivacy">Privacy Policy</span>
+    </a>
+    <button onclick="closeMenuAndGo('contact')">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16v12H4V6z" stroke="currentColor" stroke-width="1.6"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span data-i18n="menuContact">Contact Us</span>
+    </button>
+  </div>
+</div>
+
+<!-- ============ CONTACT US PAGE ============ -->
+<div class="screen" id="contact">
+  <div class="lang-switch">
+    <button data-lang="si" onclick="setLang('si')">සිං</button>
+    <button data-lang="ta" onclick="setLang('ta')">த</button>
+    <button data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
+  <div class="page-wrap">
+    <div class="page-top">
+      <button class="icon-btn" onclick="goTo('start')">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h2 data-i18n="menuContact">Contact Us</h2>
+    </div>
+    <div class="legal-card">
+      <p data-i18n="contactIntro">ගණිත හපන්නු සම්බන්ධ ගැටලුවක්, යෝජනාවක් හෝ දෝෂයක් තියෙනවා නම් පහත ෆෝරමය පුරවන්න. ඔයාගේ පණිවිඩය කෙළින්ම අපිට ලැබෙනවා.</p>
+      <div class="contact-field">
+        <label data-i18n="formNameLabel">ඔයාගේ නම</label>
+        <input type="text" id="contactName" data-i18n-placeholder="formNamePlaceholder" placeholder="උදා: නිමල් පෙරේරා">
+      </div>
+      <div class="contact-field">
+        <label data-i18n="formMessageLabel">පණිවිඩය</label>
+        <textarea id="contactMessage" data-i18n-placeholder="formMessagePlaceholder" placeholder="ඔයාගේ ගැටලුව මෙතන ලියන්න..."></textarea>
+      </div>
+      <button class="btn btn-leaf" style="width:100%" onclick="sendContactMessage()">
+        <span data-i18n="sendBtn">📩 එවන්න</span>
+      </button>
+      <div class="contact-status" id="contactStatus"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============ MAP SCREEN ============ -->
+<div class="screen" id="map">
+  <div class="topbar">
+    <div class="stat-pill">⭐ <span id="totalStars">0</span>/30</div>
+    <div id="authArea"></div>
+    <div class="stat-pill" style="color:var(--mango)">🪙 <span id="totalCoins">0</span></div>
+  </div>
+  <div class="sync-status" id="syncStatus"></div>
+  <div class="map-title">
+    <h1>සිතියම</h1>
+    <p>ලේවල් එකක් තෝරලා පටන් ගන්න</p>
+  </div>
+  <div class="path-wrap" id="pathWrap">
+    <svg class="path-svg" id="pathSvg" viewBox="0 0 100 1500" preserveAspectRatio="none"></svg>
+    <div class="nodes-col" id="nodesCol"></div>
+  </div>
+</div>
+
+<!-- ============ LEVEL SCREEN ============ -->
+<div class="screen" id="level">
+  <div class="lvl-top">
+    <button class="icon-btn" onclick="exitLevel()">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="progress-track"><div class="progress-fill" id="qProgress" style="width:0%"></div></div>
+    <div class="coin-tally">🪙 <span id="lvlCoins">0</span></div>
+  </div>
+  <div class="quiz-card">
+    <span class="quiz-topic-tag" id="quizTopicTag">මාතෘකාව</span>
+    <div class="quiz-q" id="quizQ">ප්‍රශ්නය මෙතන පෙන්වයි</div>
+    <div class="quiz-options" id="quizOptions"></div>
+    <div class="feedback-box" id="feedbackBox"></div>
+    <div class="next-wrap" id="nextWrap">
+      <button class="btn btn-leaf" style="width:100%" onclick="nextQuestion()" id="nextBtn">ඊළඟට →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LEVEL COMPLETE SCREEN ============ -->
+<div class="screen" id="complete">
+  <div class="complete-card">
+    <h2 id="completeTitle" style="color:var(--mango-dark); font-size:1.5rem;">වාහ්! 🎉</h2>
+    <div class="stars-big" id="completeStars" style="justify-content:center;"></div>
+    <div class="coins-earned">🪙 <span id="completeCoins">0</span> ලැබුණා</div>
+    <p class="complete-msg" id="completeMsg">ඔයා නියමයි!</p>
+    <div class="btn-row">
+      <button class="btn btn-coral" onclick="retryLevel()">🔁 ආයෙත් උත්සාහ කරමු</button>
+      <button class="btn" onclick="goTo('map'); renderMap();">🗺️ සිතියමට යමු</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= I18N (login interface only) ================= */
+const I18N = {
+  si:{
+    gameName:"ගණිත හපන්නු",
+    subtitle:"5 වසර ශිෂ්‍යත්ව ගණිත ක්‍රීඩාව",
+    introText:"ලේවල් 10ක් හරහා ගණිත මාතෘකා පුහුණු වෙලා, තරු එකතු කරලා, ශිෂ්‍යත්ව විභාගයට සූදානම් වෙන්න!",
+    googleBtn:"Google ගිණුමෙන් පටන් ගමු",
+    authNote:"👪 දෙමව්පියන්ගේ අවසරයෙන් පමණක් Google ගිණුම භාවිත කරන්න. ප්‍රගතිය ඔයාගේම Google Drive එකේ (රහසිගතව) save වේ.",
+    orText:"හෝ",
+    guestBtn:"🎮 Guest විදියට පටන් ගමු",
+    guestNote:"Guest mode එකේදී ප්‍රගතිය මේ device එකේ විතරයි save වෙන්නේ.",
+    menuTerms:"සේවා කොන්දේසි",
+    menuPrivacy:"පෞද්ගලිකත්ව ප්‍රතිපත්තිය",
+    menuContact:"අප හා සම්බන්ධ වන්න",
+    copyrightLine:"© 2026 Edu Pab. සියලු හිමිකම් ඇවිරිණි.",
+    backBtn:"← ආපහු",
+    termsBody:[
+      ["භාවිත කොන්දේසි","\"ගණිත හපන්නු\" යනු 5 වසර ශිෂ්‍යත්ව විභාගය සඳහා ළමුන්ට ගණිතය පුහුණු වීම සඳහා Edu Pab විසින් නිර්මාණය කරන ලද අධ්‍යාපනික ක්‍රීඩාවකි. මෙය සම්පූර්ණයෙන්ම නොමිලේ, අධ්‍යාපනික අරමුණු සඳහා පමණක් සකසා ඇත."],
+      ["ගිණුම් සහ ප්‍රගතිය","Google ගිණුමකින් login වීම විකල්පයකි. login වුවහොත් ඔයාගේ ලේවල් ප්‍රගතිය ඔයාගේම Google Drive ගිණුමේ රහසිගතව save වේ. Guest ලෙස ක්‍රීඩා කළහොත් ප්‍රගතිය එම device එකේ පමණක් save වේ."],
+      ["නිසි භාවිතය","මෙම ක්‍රීඩාව අධ්‍යාපනික අරමුණු සඳහා පමණක් භාවිත කරන්න. පද්ධතියට හානි කිරීමට උත්සාහ කිරීම, වෙනත් අයගේ ගිණුම් වලට අනවසරයෙන් ප්‍රවේශ වීම, හෝ ක්‍රීඩාව අයාලේ යවීමට උත්සාහ කිරීම තහනම්ය."],
+      ["වෙනස්කම්","මෙම කොන්දේසි වරින් වර යාවත්කාලීන විය හැක. විශාල වෙනස්කම් සිදු වුවහොත් මෙම පිටුවේ දිනය යාවත්කාලීන කරනු ලැබේ."],
+      ["සම්බන්ධතාව","ප්‍රශ්න තිබේ නම් 'අප හා සම්බන්ධ වන්න' පිටුව හරහා අප වෙත ලියන්න."]
+    ],
+    privacyBody:[
+      ["අප රැස් කරන දත්ත","Guest mode: කිසිදු පුද්ගලික දත්තයක් රැස් කරන්නේ නැත — ප්‍රගතිය device එකේ පමණක් save වේ. Google login: ඔයාගේ නම, email ලිපිනය සහ profile පින්තූරය (Google වෙතින්) සහ ක්‍රීඩා ප්‍රගතිය (තරු/coins) පමණක් රැස් කෙරේ."],
+      ["දත්ත තැන්පත් කිරීම","ක්‍රීඩා ප්‍රගතිය ඔයාගේම Google Drive ගිණුමේ රහසිගත 'App Data' ෆෝල්ඩරයක සුරැකෙයි — එය ඔයාගේ සාමාන්‍ය Drive ගොනු අතර පෙනෙන්නේ නැත, සහ Edu Pab හට හෝ වෙනත් app වලට එය නොපෙනේ."],
+      ["දත්ත බෙදාගැනීම","ඔයාගේ දත්ත කිසිදු තෙවන පාර්ශවයකට විකුණන්නේ හෝ ලබා දෙන්නේ නැත. දැන්වීම් (ads) කිසිවක් නොමැත."],
+      ["ළමා පෞද්ගලිකත්වය","මෙම ක්‍රීඩාව ළමුන් සඳහා නිර්මාණය කර ඇති නිසා, Google ගිණුමකින් login වීමට පෙර දෙමව්පියන්ගේ/භාරකරුවන්ගේ අවසරය ලබා ගැනීම නිර්දේශ කරමු."],
+      ["ඔයාගේ අයිතිවාසිකම්","ඕනෑම වේලාවක Google ගිණුමෙන් log out විය හැක, එවිට device එකෙන් access token එක ඉවත් වේ. ඔයාගේ Drive එකේ save වූ දත්ත මකා දැමීමට අවශ්‍ය නම් 'අප හා සම්බන්ධ වන්න' හරහා ඉල්ලීමක් කරන්න."]
+    ],
+    contactIntro:"ගණිත හපන්නු සම්බන්ධ ගැටලුවක්, යෝජනාවක් හෝ දෝෂයක් තියෙනවා නම් පහත ෆෝරමය පුරවන්න. ඔයාගේ පණිවිඩය කෙළින්ම අපිට ලැබෙනවා.",
+    formNameLabel:"ඔයාගේ නම",
+    formNamePlaceholder:"උදා: නිමල් පෙරේරා",
+    formMessageLabel:"පණිවිඩය",
+    formMessagePlaceholder:"ඔයාගේ ගැටලුව මෙතන ලියන්න...",
+    sendBtn:"📩 එවන්න",
+    sendingText:"එවමින්...",
+    sentOkText:"✅ ස්තූතියි! ඔයාගේ පණිවිඩය ලැබුණා.",
+    sentErrText:"⚠️ පණිවිඩය යැවීමට නොහැකි විය. ටිකකින් උත්සාහ කරන්න.",
+    needFieldsText:"⚠️ නම සහ පණිවිඩය දෙකම ලියන්න."
+  },
+  ta:{
+    gameName:"கணித வீரர்கள்",
+    subtitle:"5 ஆம் தர புலமைப்பரிசில் கணிதப் பயிற்சி விளையாட்டு",
+    introText:"10 நிலைகள் மூலம் கணித பாடங்களைப் பயிற்சி செய்து, நட்சத்திரங்களை சேகரித்து, புலமைப்பரிசில் தேர்வுக்குத் தயாராகுங்கள்!",
+    googleBtn:"Google கணக்கில் தொடங்குவோம்",
+    authNote:"👪 பெற்றோர் அனுமதியுடன் மட்டும் Google கணக்கைப் பயன்படுத்தவும். முன்னேற்றம் உங்கள் சொந்த Google Drive இல் (இரகசியமாக) சேமிக்கப்படும்.",
+    orText:"அல்லது",
+    guestBtn:"🎮 விருந்தினராக தொடங்குவோம்",
+    guestNote:"விருந்தினர் பயன்முறையில் முன்னேற்றம் இந்த சாதனத்தில் மட்டுமே சேமிக்கப்படும்.",
+    menuTerms:"சேவை விதிமுறைகள்",
+    menuPrivacy:"தனியுரிமைக் கொள்கை",
+    menuContact:"எங்களை தொடர்பு கொள்ள",
+    copyrightLine:"© 2026 Edu Pab. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.",
+    backBtn:"← திரும்பிச் செல்",
+    termsBody:[
+      ["பயன்பாட்டு விதிமுறைகள்","\"கணித வீரர்கள்\" என்பது 5 ஆம் தர புலமைப்பரிசில் தேர்வுக்காக மாணவர்களுக்கு கணிதம் பயிற்சி அளிக்க Edu Pab உருவாக்கிய கல்விசார் விளையாட்டு. இது முற்றிலும் இலவசம், கல்வி நோக்கத்திற்காக மட்டுமே."],
+      ["கணக்குகள் மற்றும் முன்னேற்றம்","Google கணக்கில் உள்நுழைவது விருப்பமானது. உள்நுழைந்தால், உங்கள் நிலை முன்னேற்றம் உங்கள் சொந்த Google Drive கணக்கில் இரகசியமாக சேமிக்கப்படும். விருந்தினராக விளையாடினால், முன்னேற்றம் அந்த சாதனத்தில் மட்டுமே சேமிக்கப்படும்."],
+      ["முறையான பயன்பாடு","இந்த விளையாட்டை கல்வி நோக்கத்திற்காக மட்டுமே பயன்படுத்தவும். அமைப்புக்கு தீங்கு விளைவிக்க முயற்சிப்பது, மற்றவர்களின் கணக்குகளை அனுமதியின்றி அணுகுவது தடைசெய்யப்பட்டது."],
+      ["மாற்றங்கள்","இந்த விதிமுறைகள் அவ்வப்போது புதுப்பிக்கப்படலாம். பெரிய மாற்றங்கள் இருந்தால் இந்தப் பக்கத்தின் தேதி புதுப்பிக்கப்படும்."],
+      ["தொடர்பு","கேள்விகள் இருந்தால் 'எங்களை தொடர்பு கொள்ள' பக்கம் வழியாக எழுதவும்."]
+    ],
+    privacyBody:[
+      ["நாங்கள் சேகரிக்கும் தரவு","விருந்தினர் பயன்முறை: எந்த தனிப்பட்ட தரவும் சேகரிக்கப்படாது — முன்னேற்றம் சாதனத்தில் மட்டுமே சேமிக்கப்படும். Google உள்நுழைவு: உங்கள் பெயர், மின்னஞ்சல் மற்றும் சுயவிவரப் படம் (Google இலிருந்து) மற்றும் விளையாட்டு முன்னேற்றம் (நட்சத்திரங்கள்/நாணயங்கள்) மட்டும் சேகரிக்கப்படும்."],
+      ["தரவு சேமிப்பு","விளையாட்டு முன்னேற்றம் உங்கள் சொந்த Google Drive கணக்கில் மறைந்த 'App Data' கோப்புறையில் சேமிக்கப்படுகிறது — இது உங்கள் வழக்கமான Drive கோப்புகளுடன் தெரியாது, Edu Pab க்கோ மற்ற செயலிகளுக்கோ தெரியாது."],
+      ["தரவு பகிர்வு","உங்கள் தரவு எந்த மூன்றாம் தரப்பினருக்கும் விற்கப்படாது அல்லது கொடுக்கப்படாது. விளம்பரங்கள் எதுவும் இல்லை."],
+      ["குழந்தைகள் தனியுரிமை","இந்த விளையாட்டு குழந்தைகளுக்காக வடிவமைக்கப்பட்டுள்ளதால், Google கணக்கில் உள்நுழையும் முன் பெற்றோர்/பாதுகாவலர் அனுமதி பெறுமாறு பரிந்துரைக்கிறோம்."],
+      ["உங்கள் உரிமைகள்","எப்போது வேண்டுமானாலும் Google கணக்கிலிருந்து வெளியேறலாம். உங்கள் Drive இல் சேமிக்கப்பட்ட தரவை நீக்க வேண்டுமெனில் 'எங்களை தொடர்பு கொள்ள' வழியாக கோரிக்கை அனுப்பவும்."]
+    ],
+    contactIntro:"கணித வீரர்கள் தொடர்பான சிக்கல், பரிந்துரை அல்லது பிழை இருந்தால் கீழே உள்ள படிவத்தை நிரப்பவும். உங்கள் செய்தி நேரடியாக எங்களுக்கு வரும்.",
+    formNameLabel:"உங்கள் பெயர்",
+    formNamePlaceholder:"உதா: குமார்",
+    formMessageLabel:"செய்தி",
+    formMessagePlaceholder:"உங்கள் சிக்கலை இங்கே எழுதவும்...",
+    sendBtn:"📩 அனுப்பு",
+    sendingText:"அனுப்புகிறது...",
+    sentOkText:"✅ நன்றி! உங்கள் செய்தி கிடைத்தது.",
+    sentErrText:"⚠️ செய்தியை அனுப்ப முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+    needFieldsText:"⚠️ பெயர் மற்றும் செய்தி இரண்டையும் எழுதவும்."
+  },
+  en:{
+    gameName:"Math Champs",
+    subtitle:"Grade 5 Scholarship Math Practice Game",
+    introText:"Practice maths across 10 levels, collect stars, and get ready for the Scholarship exam!",
+    googleBtn:"Continue with Google",
+    authNote:"👪 Please use a Google account only with parental permission. Progress is saved privately in your own Google Drive.",
+    orText:"or",
+    guestBtn:"🎮 Continue as Guest",
+    guestNote:"In guest mode, progress is saved only on this device.",
+    menuTerms:"Terms of Service",
+    menuPrivacy:"Privacy Policy",
+    menuContact:"Contact Us",
+    copyrightLine:"© 2026 Edu Pab. All rights reserved.",
+    backBtn:"← Back",
+    termsBody:[
+      ["Terms of use","\"Math Champs\" is an educational game built by Edu Pab to help students practise maths for the Grade 5 Scholarship exam. It is completely free and intended for educational use only."],
+      ["Accounts and progress","Signing in with Google is optional. If you sign in, your level progress is saved privately in your own Google Drive account. If you play as a Guest, progress is saved only on that device."],
+      ["Fair use","Please use this game for educational purposes only. Attempting to damage the system, access other people's accounts without permission, or misuse the game is not allowed."],
+      ["Changes","These terms may be updated from time to time. The date on this page will be updated for any significant change."],
+      ["Contact","If you have questions, please reach us through the 'Contact Us' page."]
+    ],
+    privacyBody:[
+      ["What we collect","Guest mode: no personal data is collected — progress is stored only on your device. Google sign-in: only your name, email address, and profile picture (from Google), plus your game progress (stars/coins), are collected."],
+      ["Where data is stored","Game progress is stored in a hidden 'App Data' folder inside your own Google Drive account — it does not appear among your normal Drive files, and is not visible to Edu Pab or any other app."],
+      ["Data sharing","Your data is never sold or given to any third party. There are no advertisements in this game."],
+      ["Children's privacy","Because this game is designed for children, we recommend getting parental/guardian permission before signing in with a Google account."],
+      ["Your rights","You can sign out of your Google account at any time. If you'd like your saved Drive data deleted, please send a request via 'Contact Us'."]
+    ],
+    contactIntro:"If you have a problem, suggestion, or found a bug related to Math Champs, please fill out the form below. Your message comes straight to us.",
+    formNameLabel:"Your name",
+    formNamePlaceholder:"e.g. Nimal Perera",
+    formMessageLabel:"Message",
+    formMessagePlaceholder:"Describe your issue here...",
+    sendBtn:"📩 Send",
+    sendingText:"Sending...",
+    sentOkText:"✅ Thank you! Your message was received.",
+    sentErrText:"⚠️ Couldn't send the message. Please try again shortly.",
+    needFieldsText:"⚠️ Please fill in both your name and message."
+  }
+};
+
+let currentLang = localStorage.getItem("ganithaHapannuLang") || "si";
+
+function setLang(lang){
+  currentLang = lang;
+  try{ localStorage.setItem("ganithaHapannuLang", lang); }catch(e){}
+  applyI18n();
+}
+
+function applyI18n(){
+  const dict = I18N[currentLang] || I18N.si;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(dict[key] !== undefined) el.textContent = dict[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-placeholder');
+    if(dict[key] !== undefined) el.placeholder = dict[key];
+  });
+  document.querySelectorAll('.lang-switch button').forEach(b=>{
+    b.classList.toggle('active', b.getAttribute('data-lang') === currentLang);
+  });
+}
+
+function renderLegalPage(elId, sections){
+  const el = document.getElementById(elId);
+  if(!el || !sections) return;
+  el.innerHTML = sections.map(([h,p])=>`<h3>${h}</h3><p>${p}</p>`).join('');
+}
+
+/* ---- hamburger menu ---- */
+function toggleMenu(){
+  document.getElementById('menuPopover').classList.toggle('show');
+}
+function closeMenuAndGo(screenId){
+  document.getElementById('menuPopover').classList.remove('show');
+  goTo(screenId);
+}
+document.addEventListener('click', (e)=>{
+  const pop = document.getElementById('menuPopover');
+  const btn = document.querySelector('.menu-btn');
+  if(pop && pop.classList.contains('show') && !pop.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
+    pop.classList.remove('show');
+  }
+});
+
+/* ---- contact form -> Telegram via Netlify function ---- */
+async function sendContactMessage(){
+  const dict = I18N[currentLang] || I18N.si;
+  const name = document.getElementById('contactName').value.trim();
+  const msg = document.getElementById('contactMessage').value.trim();
+  const statusEl = document.getElementById('contactStatus');
+  if(!name || !msg){
+    statusEl.className = 'contact-status no';
+    statusEl.textContent = dict.needFieldsText;
+    return;
+  }
+  statusEl.className = 'contact-status pending';
+  statusEl.textContent = dict.sendingText;
+  try{
+    const r = await fetch('/.netlify/functions/contact-message', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ name, message: msg, time: new Date().toISOString() })
+    });
+    if(r.ok){
+      statusEl.className = 'contact-status ok';
+      statusEl.textContent = dict.sentOkText;
+      document.getElementById('contactName').value = '';
+      document.getElementById('contactMessage').value = '';
+    }else{
+      throw new Error('bad response');
+    }
+  }catch(e){
+    statusEl.className = 'contact-status no';
+    statusEl.textContent = dict.sentErrText;
+  }
+}
+
+/* ================= DATA ================= */
+const TOPICS = [
+  { key:"numbers", name:"සංඛ්‍යා", icon:"num",
+    q:[
+      {q:"27,405 යන සංඛ්‍යාවේ 'දහස් ස්ථානයේ' ඉලක්කම කුමක්ද?", opts:["2","7","4","5"], a:1, ex:"27,405 හි 7 තියෙන්නේ දහස් ස්ථානයේ."},
+      {q:"පහත සංඛ්‍යා අතරින් විශාලතම සංඛ්‍යාව කුමක්ද?", opts:["9,807","9,087","9,780","9,708"], a:0, ex:"සියයේ ස්ථානය සසඳන විට 9,807 අනෙක් සියල්ලට වඩා විශාලය."},
+      {q:"5,000 + 300 + 20 + 6 = ?", opts:["5,326","5,236","5,362","5,632"], a:0, ex:"ස්ථානීය අගයන් එකතු කළ විට 5,326 ලැබේ."},
+      {q:"98,765 යන සංඛ්‍යාව ළඟම දහයට වටයනය කළ විට ලැබෙන්නේ කුමක්ද?", opts:["98,760","98,770","98,700","99,000"], a:1, ex:"ඒකක ස්ථානයේ 5 නිසා ඉහළට වටයනය වී 98,770 ලැබේ."},
+      {q:"පහත සංඛ්‍යා අතරින් ඉරට්ටේ සංඛ්‍යාව කුමක්ද?", opts:["4,431","7,215","6,028","9,109"], a:2, ex:"6,028 හි ඒකකය 8 - ඉරට්ටේ සංඛ්‍යාවකි."},
+      {q:"සියයේ ස්ථානයේ 6ක්, දහසේ ස්ථානයේ 3ක්, ඒකක ස්ථානයේ 9ක් සහ දහස් ස්ථානයේ 2ක් ඇති සංඛ්‍යාව කුමක්ද?", opts:["2,639","3,269","2,369","6,239"], a:0, ex:"දහස්-2, සිය-6, දහ-3, ඒකක-9 → 2,639"}
+    ]},
+  { key:"addition", name:"එකතු කිරීම", icon:"plus",
+    q:[
+      {q:"3,456 + 2,378 = ?", opts:["5,834","5,734","5,824","6,834"], a:0, ex:"3,456 + 2,378 = 5,834"},
+      {q:"1,999 + 1 = ?", opts:["1,000","2,000","1,999","2,001"], a:1, ex:"1,999 ට 1 එකතු කළ විට 2,000 වේ."},
+      {q:"රුපියල් 4,250ක් සහ රුපියල් 3,675ක් එකතු කළහොත් මුළු මුදල කීයද?", opts:["රු.7,825","රු.7,925","රු.8,025","රු.7,725"], a:1, ex:"4,250 + 3,675 = 7,925"},
+      {q:"245 + 368 + 112 = ?", opts:["725","715","735","625"], a:0, ex:"245 + 368 = 613, ඉන්පසු 613 + 112 = 725"},
+      {q:"6,004 + 998 = ?", opts:["6,992","7,002","7,992","6,902"], a:1, ex:"6,004 + 998 = 7,002"},
+      {q:"ලොකු සංඛ්‍යාවකට කුඩා සංඛ්‍යාවක් එකතු කළ විට ලැබෙන එකතුව සැමවිටම:", opts:["කුඩා සංඛ්‍යාවට වඩා කුඩාය","ලොකු සංඛ්‍යාවට වඩා විශාලය","ලොකු සංඛ්‍යාවට සමානය","0 වේ"], a:1, ex:"ධන සංඛ්‍යා දෙකක එකතුව සෑම විටම එකිනෙකට වඩා විශාලය."}
+    ]},
+  { key:"subtraction", name:"අඩු කිරීම", icon:"minus",
+    q:[
+      {q:"8,000 - 3,456 = ?", opts:["4,544","4,644","4,554","5,544"], a:0, ex:"8,000 - 3,456 = 4,544"},
+      {q:"10,205 - 9,876 = ?", opts:["329","429","339","229"], a:0, ex:"10,205 - 9,876 = 329"},
+      {q:"රුපියල් 1,000 සිට රුපියල් 375ක් වියදම් කළහොත් ඉතුරු වන්නේ කීයද?", opts:["රු.725","රු.625","රු.635","රු.715"], a:1, ex:"1,000 - 375 = 625"},
+      {q:"5,500 - 2,750 = ?", opts:["2,750","2,650","2,850","3,250"], a:0, ex:"5,500 - 2,750 = 2,750"},
+      {q:"මුළු පිටු ගණන 120කි. දරුවෙක් පිටු 45ක් කියෙව්වා නම්, ඉතිරි පිටු කීයද?", opts:["85","75","65","70"], a:1, ex:"120 - 45 = 75"},
+      {q:"9,001 - 1 = ?", opts:["9,000","9,002","8,999","9,001"], a:0, ex:"9,001 - 1 = 9,000"}
+    ]},
+  { key:"multiplication", name:"ගුණ කිරීම", icon:"times",
+    q:[
+      {q:"24 × 6 = ?", opts:["144","134","154","124"], a:0, ex:"24 × 6 = 144"},
+      {q:"125 × 8 = ?", opts:["900","1,000","950","1,100"], a:1, ex:"125 × 8 = 1,000"},
+      {q:"එක් පෙට්ටියක පොත් 12ක් තියෙනවා. පෙට්ටි 15ක තියෙන්නේ පොත් කීයක්ද?", opts:["170","180","190","160"], a:1, ex:"12 × 15 = 180"},
+      {q:"7 × 0 × 25 = ?", opts:["0","32","175","25"], a:0, ex:"ඕනෑම සංඛ්‍යාවක් 0 න් ගුණ කළ විට ලැබෙන්නේ 0 යි."},
+      {q:"36 × 4 = ?", opts:["134","144","154","124"], a:1, ex:"36 × 4 = 144"},
+      {q:"ළමයෙක් දිනකට පිටු 9ක් ලියනවා. දින 11ක් තුළ ලියන පිටු ගණන කීයද?", opts:["99","89","109","119"], a:0, ex:"9 × 11 = 99"}
+    ]},
+  { key:"division", name:"බෙදීම", icon:"divide",
+    q:[
+      {q:"144 ÷ 12 = ?", opts:["10","11","12","13"], a:2, ex:"144 ÷ 12 = 12"},
+      {q:"රුපියල් 960ක් දරුවන් 8 දෙනෙකුට සමානව බෙදුවොත් එක් අයෙකුට ලැබෙන්නේ කීයද?", opts:["රු.100","රු.110","රු.120","රු.130"], a:2, ex:"960 ÷ 8 = 120"},
+      {q:"91 ÷ 7 = ?", opts:["12","13","14","11"], a:1, ex:"91 ÷ 7 = 13"},
+      {q:"පැපොල් 200ක් කූඩ 5කට සමානව බෙදුවොත් එක් කූඩයකට ලැබෙන්නේ කීයද?", opts:["30","35","40","45"], a:2, ex:"200 ÷ 5 = 40"},
+      {q:"0 ÷ 9 = ?", opts:["9","0","1","අනන්තය"], a:1, ex:"0 ඕනෑම සංඛ්‍යාවකින් බෙදූ විට ලැබෙන්නේ 0 යි."},
+      {q:"144 ÷ 0 ගැන කිව හැක්කේ:", opts:["144","0","නිර්වචනය කළ නොහැක","1"], a:2, ex:"ඕනෑම සංඛ්‍යාවක් 0 කින් බෙදීම නිර්වචනය කළ නොහැක."}
+    ]},
+  { key:"fractions", name:"භාග", icon:"frac",
+    q:[
+      {q:"1/2 සහ 2/4 යන භාග දෙක:", opts:["එකිනෙකට වඩා විශාලය","සමානය","1/2 කුඩාය","2/4 කුඩාය"], a:1, ex:"2/4 සරල කළ විට 1/2 වේ - ඒවා සමාන භාග."},
+      {q:"3/8 + 2/8 = ?", opts:["5/8","5/16","1/8","6/8"], a:0, ex:"හරය සමාන නිසා අංශක පමණක් එකතු කරන්න: 3+2=5, එබැවින් 5/8"},
+      {q:"පීසා එකක් කැබලි 4කට කැපුවා. දරුවෙක් 3ක් කෑවා නම්, ඉතිරි කොටස කුමක්ද?", opts:["1/4","3/4","2/4","4/4"], a:0, ex:"4න් 3ක් කෑවා නිසා ඉතිරි 1/4 කි."},
+      {q:"7/10 හි කුඩාම වචනයෙන් නම කුමක්ද?", opts:["හත් දහයෙන්","දහයෙන් හතක්","හතේ දහයක්","දහයට හතක්"], a:1, ex:"7/10 කියවෙන්නේ 'දහයෙන් හතක්' ලෙසයි."},
+      {q:"3/4 සහ 1/4 එකතු කළ විට ලැබෙන්නේ:", opts:["4/8","1","4/4 නොවේ","1/2"], a:1, ex:"3/4 + 1/4 = 4/4 = 1"},
+      {q:"5/6 ට වඩා කුඩා භාගය කුමක්ද?", opts:["7/6","6/6","2/6","5/5"], a:2, ex:"2/6 = 1/3, එය 5/6 ට වඩා බෙහෙවින් කුඩාය."}
+    ]},
+  { key:"time", name:"කාලය", icon:"clock",
+    q:[
+      {q:"පැය 1 කි. විනාඩි කීයද?", opts:["100","60","50","30"], a:1, ex:"පැයක් = විනාඩි 60"},
+      {q:"පාසල පෙ.ව. 7.30ට ආරම්භ වී පස්වරු 1.30ට අවසන් වේ. පාසල පවතින්නේ පැය කීයක්ද?", opts:["5","6","7","4"], a:1, ex:"7.30 සිට 1.30 දක්වා පැය 6ක් වේ."},
+      {q:"විනාඩි 90 යනු පැය කීයද?", opts:["1 පැයයි විනාඩි 20","1 පැයයි විනාඩි 30","2 පැයයි","1 පැයයි විනාඩි 10"], a:1, ex:"90 විනාඩි = 60+30 = 1 පැයයි විනාඩි 30"},
+      {q:"සතියක දින ගණන කීයද?", opts:["5","6","7","8"], a:2, ex:"සතියක දින 7ක් ඇත."},
+      {q:"චිත්‍රපටයක් රාත්‍රී 8.15ට පටන් ගෙන පැය 2ක් දිග ඇත. එය අවසන් වන්නේ කීයටද?", opts:["රාත්‍රී 10.00","රාත්‍රී 10.15","රාත්‍රී 9.15","රාත්‍රී 10.30"], a:1, ex:"8.15 + 2:00 = 10.15"},
+      {q:"වර්ෂයක මාස ගණන කීයද?", opts:["10","11","12","13"], a:2, ex:"වර්ෂයක මාස 12ක් ඇත."}
+    ]},
+  { key:"money", name:"මුදල්", icon:"coin",
+    q:[
+      {q:"රුපියල් 500ක් දී භාණ්ඩයක් රු.320කට මිලදී ගත්තොත් ඉතිරි කීයද?", opts:["රු.170","රු.180","රු.190","රු.200"], a:1, ex:"500 - 320 = 180"},
+      {q:"රු.50 නෝට්ටු 4ක් සහ රු.20 නෝට්ටු 3ක් එකතුව කීයද?", opts:["රු.240","රු.260","රු.250","රු.230"], a:1, ex:"(50×4) + (20×3) = 200 + 60 = 260"},
+      {q:"පොතක් රු.145ක් වේ. එවැනි පොත් 3ක මුළු මිල කීයද?", opts:["රු.435","රු.415","රු.445","රු.425"], a:0, ex:"145 × 3 = 435"},
+      {q:"රු.1,000 බැංකු නෝට්ටුවකින් රු.680ක බිල්පතක් ගෙවුවොත් අවශේෂය කීයද?", opts:["රු.320","රු.420","රු.220","රු.380"], a:0, ex:"1,000 - 680 = 320"},
+      {q:"ශිෂ්‍යයෙක් දිනකට රු.25 ඉතුරු කරයි. දින 10කින් ඉතුරු වන මුදල කීයද?", opts:["රු.200","රු.250","රු.225","රු.300"], a:1, ex:"25 × 10 = 250"},
+      {q:"සත 100 = රුපියල් 1 නම්, සත 350 = රුපියල් කීයද?", opts:["රු.3.50","රු.35","රු.0.35","රු.350"], a:0, ex:"350 සත ÷ 100 = රු.3.50"}
+    ]},
+  { key:"length", name:"දිග හා දුර", icon:"ruler",
+    q:[
+      {q:"1 මීටරය = සෙන්ටිමීටර කීයද?", opts:["10","100","1,000","50"], a:1, ex:"1 m = 100 cm"},
+      {q:"1 කිලෝමීටරය = මීටර කීයද?", opts:["100","1,000","10,000","500"], a:1, ex:"1 km = 1,000 m"},
+      {q:"රිබනයක් 2 මීටර 50 සෙ.මී. දිගය. එය සම්පූර්ණයෙන්ම සෙ.මී. වලින් කීයද?", opts:["250","205","2,050","520"], a:0, ex:"2m 50cm = (2×100)+50 = 250 cm"},
+      {q:"පාසැලේ සිට ගෙදරට කි.මී. 3ක් වේ. යාම-ඊම දෙකෙන් මුළු දුර කීයද?", opts:["3 km","6 km","9 km","5 km"], a:1, ex:"3 × 2 = 6 km"},
+      {q:"පහත ඒවායින් දිගම දුර කුමක්ද?", opts:["500 m","5 km","50 m","5,000 cm"], a:1, ex:"5 km = 5,000 m, එය අනෙක් ඒවාට වඩා දිගම."},
+      {q:"මේසයක උස 90 cm නම්, එය මීටර වලින් කීයද?", opts:["0.9 m","9 m","0.09 m","1.9 m"], a:0, ex:"90 cm ÷ 100 = 0.9 m"}
+    ]},
+  { key:"mass", name:"බර හා පරිමාව", icon:"scale",
+    q:[
+      {q:"1 කිලෝග්‍රෑමය = ග්‍රෑම් කීයද?", opts:["100","1,000","10,000","500"], a:1, ex:"1 kg = 1,000 g"},
+      {q:"1 ලීටරය = මිලි ලීටර කීයද?", opts:["10","100","1,000","500"], a:2, ex:"1 L = 1,000 mL"},
+      {q:"සීනි කිලෝ 2ක් සහ ග්‍රෑම් 500ක් නම්, එය සම්පූර්ණයෙන්ම ග්‍රෑම් වලින් කීයද?", opts:["2,500 g","2,050 g","2,005 g","250 g"], a:0, ex:"2kg 500g = 2000+500 = 2,500 g"},
+      {q:"බෝතලයක වතුර 750 mL තිබේ. එයට තවත් 250 mL එකතු කළොත් මුළු ප්‍රමාණය කීයද?", opts:["1 L","900 mL","1.5 L","800 mL"], a:0, ex:"750+250 = 1,000 mL = 1 L"},
+      {q:"පහත ඒවායින් බරම වස්තුව කුමක්ද?", opts:["500 g","2 kg","1,500 g","900 g"], a:1, ex:"2 kg = 2,000 g, එය අනෙක් ඒවාට වඩා බරය."},
+      {q:"රසකැවිලි කිලෝ 3ක් දරුවන් 6 දෙනෙකුට සමානව බෙදුවොත් එක් අයෙකුට ග්‍රෑම් කීයක් ලැබේද?", opts:["500 g","400 g","600 g","300 g"], a:0, ex:"3,000g ÷ 6 = 500 g"}
+    ]}
+];
+
+const ICONS = {
+  num: `<circle cx="24" cy="24" r="22" fill="#0B4F4A"/><text x="24" y="31" font-family="Baloo Tamma 2" font-size="18" font-weight="700" fill="#FBF3E1" text-anchor="middle">5</text>`,
+  plus: `<circle cx="24" cy="24" r="22" fill="#0B4F4A"/><path d="M24 13v22M13 24h22" stroke="#FBF3E1" stroke-width="5" stroke-linecap="round"/>`,
+  minus: `<circle cx="24" cy="24" r="22" fill="#0B4F4A"/><path d="M13 24h22" stroke="#FBF3E1" stroke-width="5" stroke-linecap="round"/>`,
+  times: `<circle cx="24" cy="24" r="22" fill="#0B4F4A"/><path d="M16 16l16 16M32 16L16 32" stroke="#FBF3E1" stroke-width="5" stroke-linecap="round"/>`,
+  divide: `<circle cx="24" cy="24" r="22" fill="#0B4F4A"/><circle cx="24" cy="15" r="2.6" fill="#FBF3E1"/><path d="M13 24h22" stroke="#FBF3E1" stroke-width="4" stroke-linecap="round"/><circle cx="24" cy="33" r="2.6" fill="#FBF3E1"/>`,
+  frac: `<circle cx="24" cy="24" r="22" fill="#0B4F4A"/><text x="24" y="20" font-family="Baloo Tamma 2" font-size="12" font-weight="700" fill="#FBF3E1" text-anchor="middle">1</text><path d="M15 24h18" stroke="#FBF3E1" stroke-width="2.5"/><text x="24" y="36" font-family="Baloo Tamma 2" font-size="12" font-weight="700" fill="#FBF3E1" text-anchor="middle">2</text>`,
+  clock: `<circle cx="24" cy="24" r="22" fill="#0B4F4A"/><circle cx="24" cy="24" r="13" fill="none" stroke="#FBF3E1" stroke-width="3"/><path d="M24 17v7l5 4" stroke="#FBF3E1" stroke-width="3" stroke-linecap="round" fill="none"/>`,
+  coin: `<circle cx="24" cy="24" r="22" fill="#0B4F4A"/><circle cx="24" cy="24" r="13" fill="none" stroke="#FFB100" stroke-width="3"/><text x="24" y="30" font-family="Baloo Tamma 2" font-size="14" font-weight="700" fill="#FFB100" text-anchor="middle">Rs</text>`,
+  ruler: `<circle cx="24" cy="24" r="22" fill="#0B4F4A"/><rect x="10" y="20" width="28" height="9" rx="2" fill="#FBF3E1" transform="rotate(-20 24 24)"/>`,
+  scale: `<circle cx="24" cy="24" r="22" fill="#0B4F4A"/><path d="M24 14v18M14 20h20M14 20l-4 8h8l-4-8zM34 20l-4 8h8l-4-8z" stroke="#FBF3E1" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+};
+
+const STAR_ON = `<svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.3l7.1-.7L12 2z" fill="#FFB100" stroke="#E89600" stroke-width="1"/></svg>`;
+const STAR_OFF = `<svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.3l7.1-.7L12 2z" fill="#E4D9BE" stroke="#D4C6A2" stroke-width="1"/></svg>`;
+const LOCK_SVG = `<svg class="lock-icon" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" fill="#7D9490"/><path d="M8 11V8a4 4 0 018 0v3" stroke="#7D9490" stroke-width="2.2" fill="none"/></svg>`;
+
+/* ================= GOOGLE LOGIN + DRIVE SYNC =================
+   SETUP REQUIRED (Thisum must do this once):
+   1. Go to https://console.cloud.google.com/ → create a project.
+   2. APIs & Services → OAuth consent screen → set up (External, add app name/logo,
+      add your Netlify domain, add test users while testing).
+   3. APIs & Services → Library → enable "Google Drive API".
+   4. APIs & Services → Credentials → Create Credentials → OAuth client ID → "Web application".
+      Add your live site URL (e.g. https://edupab.netlify.app) under
+      "Authorized JavaScript origins". No redirect URI needed for this flow.
+   5. Copy the generated Client ID and paste it below, replacing YOUR_CLIENT_ID.
+   6. While the OAuth consent screen is in "Testing" mode, only accounts you add
+      as test users can sign in. Publish the app (or verify it) before wide use.
+=============================================================== */
+const GOOGLE_CLIENT_ID = "951541782605-3kvmeqo4epvi9fmtcie0m2p3l9imlpab.apps.googleusercontent.com";
+const DRIVE_FILE_NAME = "ganitha-hapannu-progress.json";
+const NOTIFY_ENDPOINT = "/.netlify/functions/notify-login"; // serverless function, see below
+
+let gTokenClient = null;
+let gAccessToken = null;
+let gUser = null; // { name, email, picture }
+let gDriveFileId = null;
+
+function initGoogleAuth(){
+  if(!window.google || !google.accounts || GOOGLE_CLIENT_ID.startsWith("YOUR_CLIENT_ID")) return;
+  gTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: "email profile https://www.googleapis.com/auth/drive.appdata",
+    callback: async (resp)=>{
+      if(resp.error){ console.error("Google auth error:", resp); return; }
+      gAccessToken = resp.access_token;
+      await onGoogleSignedIn();
+    }
+  });
+}
+
+function handleGoogleSignIn(){
+  if(GOOGLE_CLIENT_ID.startsWith("YOUR_CLIENT_ID")){
+    alert("Google Client ID එක තවම සකසලා නෑ. SKILL/README සටහන බලන්න.");
+    return;
+  }
+  if(!gTokenClient){ initGoogleAuth(); }
+  if(gTokenClient) gTokenClient.requestAccessToken();
+}
+
+async function onGoogleSignedIn(){
+  try{
+    const r = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+      headers:{ Authorization: `Bearer ${gAccessToken}` }
+    });
+    gUser = await r.json();
+  }catch(e){ console.error(e); gUser = null; }
+
+  document.getElementById('syncStatus').textContent = "☁️ Drive එකෙන් ප්‍රගතිය load වෙනවා...";
+  await driveLoadProgress();
+  renderAuthArea();
+  goTo('map');
+  renderMap();
+  document.getElementById('syncStatus').textContent = "";
+
+  // fire-and-forget login notification (does nothing if function isn't deployed)
+  if(gUser){
+    fetch(NOTIFY_ENDPOINT, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ name:gUser.name, email:gUser.email, time:new Date().toISOString() })
+    }).catch(()=>{ /* ignore if function not deployed yet */ });
+  }
+}
+
+function signOutGoogle(){
+  if(gAccessToken && window.google){
+    google.accounts.oauth2.revoke(gAccessToken, ()=>{});
+  }
+  gAccessToken = null; gUser = null; gDriveFileId = null;
+  renderAuthArea();
+}
+
+function renderAuthArea(){
+  const el = document.getElementById('authArea');
+  if(!el) return;
+  if(gUser){
+    el.innerHTML = `
+      <div class="sync-badge">
+        <img src="${gUser.picture || ''}" alt="">
+        <span>${(gUser.name||'').split(' ')[0]}</span>
+        <button onclick="signOutGoogle()">exit</button>
+      </div>`;
+  }else{
+    el.innerHTML = '';
+  }
+}
+
+/* ---- Drive appDataFolder read/write ---- */
+async function driveFindFileId(){
+  const url = `https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${DRIVE_FILE_NAME}'&fields=files(id,name)`;
+  const r = await fetch(url, { headers:{ Authorization:`Bearer ${gAccessToken}` } });
+  const data = await r.json();
+  if(data.files && data.files.length) return data.files[0].id;
+  return null;
+}
+
+async function driveLoadProgress(){
+  try{
+    gDriveFileId = await driveFindFileId();
+    if(gDriveFileId){
+      const r = await fetch(`https://www.googleapis.com/drive/v3/files/${gDriveFileId}?alt=media`, {
+        headers:{ Authorization:`Bearer ${gAccessToken}` }
+      });
+      const remote = await r.json();
+      if(remote && Array.isArray(remote.stars)){
+        state = remote;
+        saveState(); // mirror into localStorage too as a local cache
+      }
+    }else{
+      // no file yet in Drive — push current local progress as the first save
+      await driveSaveProgress();
+    }
+  }catch(e){ console.error("Drive load failed:", e); }
+}
+
+async function driveSaveProgress(){
+  if(!gAccessToken) return; // guest mode — localStorage only
+  try{
+    const body = JSON.stringify(state);
+    if(!gDriveFileId){
+      gDriveFileId = await driveFindFileId();
+    }
+    if(gDriveFileId){
+      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${gDriveFileId}?uploadType=media`, {
+        method:"PATCH",
+        headers:{ Authorization:`Bearer ${gAccessToken}`, "Content-Type":"application/json" },
+        body
+      });
+    }else{
+      const metadata = { name: DRIVE_FILE_NAME, parents:["appDataFolder"] };
+      const form = new FormData();
+      form.append('metadata', new Blob([JSON.stringify(metadata)], {type:'application/json'}));
+      form.append('file', new Blob([body], {type:'application/json'}));
+      const r = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
+        method:"POST",
+        headers:{ Authorization:`Bearer ${gAccessToken}` },
+        body: form
+      });
+      const created = await r.json();
+      gDriveFileId = created.id;
+    }
+  }catch(e){ console.error("Drive save failed:", e); }
+}
+
+window.addEventListener('load', initGoogleAuth);
+
+/* ================= STATE ================= */
+const STORE_KEY = "ganithaHapannuProgress_v1";
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return { stars:new Array(TOPICS.length).fill(0), coins:0 };
+}
+function saveState(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){} }
+let state = loadState();
+
+let currentLevel = 0;
+let qIndex = 0;
+let correctCount = 0;
+let levelCoins = 0;
+let answered = false;
+
+/* ================= NAVIGATION ================= */
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* ================= MAP RENDER ================= */
+function isUnlocked(i){ return i===0 || state.stars[i-1] >= 1; }
+
+function renderMap(){
+  renderAuthArea();
+  document.getElementById('totalCoins').textContent = state.coins;
+  document.getElementById('totalStars').textContent = state.stars.reduce((a,b)=>a+b,0);
+
+  const col = document.getElementById('nodesCol');
+  col.innerHTML = '';
+  let currentUnlockedIdx = 0;
+  TOPICS.forEach((t,i)=>{
+    const row = document.createElement('div');
+    row.className = 'node-row ' + (i%2===0 ? 'left':'right');
+    const unlocked = isUnlocked(i);
+    const done = state.stars[i] >= 1;
+    if(unlocked && !done) currentUnlockedIdx = i;
+
+    const node = document.createElement('div');
+    node.className = 'node ' + (done ? 'done' : (unlocked ? 'unlocked':'locked'));
+    node.innerHTML = `
+      <div class="node-num">${i+1}</div>
+      ${unlocked ? `<svg viewBox="0 0 48 48">${ICONS[t.icon]}</svg>` : LOCK_SVG}
+      <div class="node-label">${t.name}</div>
+      ${done ? `<div class="node-stars">${[0,1,2].map(s=> s < state.stars[i] ? STAR_ON : STAR_OFF).join('')}</div>` : ''}
+    `;
+    if(unlocked){ node.onclick = ()=> startLevel(i); }
+    row.appendChild(node);
+    col.appendChild(row);
+  });
+
+  // simple winding path line
+  const svg = document.getElementById('pathSvg');
+  const n = TOPICS.length;
+  const rowH = 1500/n;
+  let d = '';
+  for(let i=0;i<n;i++){
+    const x = i%2===0 ? 26 : 74;
+    const y = rowH*i + rowH/2;
+    d += (i===0? `M ${x} ${y}`: ` L ${x} ${y}`);
+  }
+  svg.innerHTML = `<path d="${d}" fill="none" stroke="#FBF3E1" stroke-width="2.5" stroke-dasharray="1 9" stroke-linecap="round" opacity="0.55"/>`;
+}
+
+/* ================= LEVEL LOGIC ================= */
+function startLevel(i){
+  currentLevel = i;
+  qIndex = 0;
+  correctCount = 0;
+  levelCoins = 0;
+  document.getElementById('lvlCoins').textContent = 0;
+  goTo('level');
+  renderQuestion();
+}
+
+function exitLevel(){ goTo('map'); renderMap(); }
+
+function renderQuestion(){
+  answered = false;
+  const topic = TOPICS[currentLevel];
+  const q = topic.q[qIndex];
+  document.getElementById('quizTopicTag').textContent = topic.name + ` · ප්‍රශ්නය ${qIndex+1}/${topic.q.length}`;
+  document.getElementById('quizQ').textContent = q.q;
+  document.getElementById('qProgress').style.width = ((qIndex)/topic.q.length*100) + '%';
+  document.getElementById('feedbackBox').className = 'feedback-box';
+  document.getElementById('feedbackBox').textContent = '';
+  document.getElementById('nextWrap').className = 'next-wrap';
+
+  const letters = ['අ','ආ','ඇ','ඈ'];
+  const optsWrap = document.getElementById('quizOptions');
+  optsWrap.innerHTML = '';
+  q.opts.forEach((opt, idx)=>{
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.innerHTML = `<span class="opt-letter">${letters[idx]}</span><span>${opt}</span>`;
+    b.onclick = ()=> selectAnswer(idx, b);
+    optsWrap.appendChild(b);
+  });
+}
+
+function selectAnswer(idx, btnEl){
+  if(answered) return;
+  answered = true;
+  const topic = TOPICS[currentLevel];
+  const q = topic.q[qIndex];
+  const allBtns = document.querySelectorAll('#quizOptions .opt-btn');
+  allBtns.forEach(b=>b.classList.add('disabled'));
+
+  const fb = document.getElementById('feedbackBox');
+  if(idx === q.a){
+    btnEl.classList.add('correct');
+    correctCount++;
+    levelCoins += 10;
+    document.getElementById('lvlCoins').textContent = levelCoins;
+    fb.className = 'feedback-box ok show';
+    fb.textContent = '✅ නියමයි! ' + q.ex;
+  }else{
+    btnEl.classList.add('wrong');
+    allBtns[q.a].classList.add('correct');
+    fb.className = 'feedback-box no show';
+    fb.textContent = '💡 ' + q.ex;
+  }
+  document.getElementById('nextWrap').classList.add('show');
+  document.getElementById('nextBtn').textContent = (qIndex < topic.q.length-1) ? 'ඊළඟට →' : 'ලේවල් අවසන් 🏁';
+}
+
+function nextQuestion(){
+  const topic = TOPICS[currentLevel];
+  qIndex++;
+  if(qIndex >= topic.q.length){
+    finishLevel();
+  }else{
+    renderQuestion();
+  }
+}
+
+function finishLevel(){
+  document.getElementById('qProgress').style.width = '100%';
+  const topic = TOPICS[currentLevel];
+  const total = topic.q.length;
+  let stars = 1;
+  if(correctCount === total) stars = 3;
+  else if(correctCount >= Math.ceil(total*0.66)) stars = 2;
+  else if(correctCount === 0) stars = 0;
+
+  if(stars > state.stars[currentLevel]){
+    state.stars[currentLevel] = stars;
+  }
+  state.coins += levelCoins;
+  saveState();
+  driveSaveProgress();
+
+  document.getElementById('completeStars').innerHTML =
+    [0,1,2].map(s => s < stars ? STAR_ON : STAR_OFF).join('');
+  document.getElementById('completeCoins').textContent = levelCoins;
+
+  const msgs = [
+    "කමක් නෑ, ආයෙත් උත්සාහ කරමු! 💪",
+    "හොඳ පටන් ගැනීමක්! ටිකක් තව පුරුදු වෙමු. 🙂",
+    "සුපිරි වැඩක්! ඔයා හරිම දක්ෂයි! 🌟",
+    "පරිපූර්ණයි! ඔයා ගණිත හපන්නෙක්! 🏆"
+  ];
+  document.getElementById('completeTitle').textContent =
+    correctCount === total ? "වාහ්! සම්පූර්ණයි! 🎉" : (correctCount===0 ? "එහෙනම් ආයෙත් වරක්! 🎯" : "නියමයි! 👏");
+  document.getElementById('completeMsg').textContent =
+    `${total} න් ${correctCount}ක් හරි උත්තර දුන්නා. ` + msgs[stars];
+
+  goTo('complete');
+}
+
+function retryLevel(){ startLevel(currentLevel); }
+
+/* init */
+applyI18n();
+renderMap();
+</script>
+</body>
+</html>
