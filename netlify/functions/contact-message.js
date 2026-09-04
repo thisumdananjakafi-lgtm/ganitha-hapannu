@@ -1,11 +1,24 @@
 // netlify/functions/contact-message.js
-// Receives contact form submissions from the site and forwards them to Telegram.
+// Receives contact form submissions from any Edu Pab site and forwards them to Telegram.
+// CORS is open so this same function can be shared across sub-sites (e.g. the main
+// Edu Pab site, Ganitha Hapannu, etc.) that all want to notify the same bot.
+
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type"
+};
 
 exports.handler = async function (event) {
-  // Only allow POST requests
+  // Handle CORS preflight
+  if (event.httpMethod === "OPTIONS") {
+    return { statusCode: 204, headers: CORS_HEADERS, body: "" };
+  }
+
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
+      headers: CORS_HEADERS,
       body: JSON.stringify({ error: "Method not allowed" })
     };
   }
@@ -17,6 +30,7 @@ exports.handler = async function (event) {
     console.error("Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID env vars");
     return {
       statusCode: 500,
+      headers: CORS_HEADERS,
       body: JSON.stringify({ error: "Server not configured" })
     };
   }
@@ -27,6 +41,7 @@ exports.handler = async function (event) {
   } catch (e) {
     return {
       statusCode: 400,
+      headers: CORS_HEADERS,
       body: JSON.stringify({ error: "Invalid JSON" })
     };
   }
@@ -34,10 +49,12 @@ exports.handler = async function (event) {
   const name = (data.name || "").toString().trim().slice(0, 200);
   const message = (data.message || "").toString().trim().slice(0, 2000);
   const time = (data.time || new Date().toISOString()).toString();
+  const source = (data.source || "Ganitha Hapannu").toString().trim().slice(0, 120);
 
   if (!name || !message) {
     return {
       statusCode: 400,
+      headers: CORS_HEADERS,
       body: JSON.stringify({ error: "Missing name or message" })
     };
   }
@@ -50,7 +67,8 @@ exports.handler = async function (event) {
       .replace(/>/g, "&gt;");
 
   const text =
-    `📩 <b>Ganitha Hapannu — New Contact Message</b>\n\n` +
+    `📩 <b>Edu Pab — New Contact Message</b>\n` +
+    `<b>From:</b> ${escapeHtml(source)}\n\n` +
     `<b>Name:</b> ${escapeHtml(name)}\n` +
     `<b>Time:</b> ${escapeHtml(time)}\n\n` +
     `<b>Message:</b>\n${escapeHtml(message)}`;
@@ -73,18 +91,21 @@ exports.handler = async function (event) {
       console.error("Telegram API error:", result);
       return {
         statusCode: 502,
+        headers: CORS_HEADERS,
         body: JSON.stringify({ error: "Failed to send Telegram message" })
       };
     }
 
     return {
       statusCode: 200,
+      headers: CORS_HEADERS,
       body: JSON.stringify({ success: true })
     };
   } catch (err) {
     console.error("Error sending to Telegram:", err);
     return {
       statusCode: 500,
+      headers: CORS_HEADERS,
       body: JSON.stringify({ error: "Internal server error" })
     };
   }
