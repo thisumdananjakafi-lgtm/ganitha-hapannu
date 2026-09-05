@@ -25,6 +25,10 @@ async function verifyTurnstile(token, remoteip) {
       body
     });
     const data = await res.json();
+    if (!data.success) {
+      // TEMP DEBUG: log Cloudflare's exact reason so we can see it in Netlify function logs
+      console.error("Turnstile siteverify failed:", JSON.stringify(data));
+    }
     return data.success === true;
   } catch (err) {
     console.error("Turnstile verification error:", err);
