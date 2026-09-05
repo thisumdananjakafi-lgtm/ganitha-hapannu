@@ -1,6 +1,6 @@
 // netlify/functions/contact-message.js
-// Receives contact form submissions from any Edu Pab site, verifies the sender is
-// human via Cloudflare Turnstile (each site can use its own Turnstile widget),
+// Receives contact form submissions from Edu Pab sites, verifies the sender is
+// human via Cloudflare Turnstile (same widget/key shared across sites),
 // then forwards the message to Telegram.
 
 const CORS_HEADERS = {
@@ -9,17 +9,8 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type"
 };
 
-// Map a "site" identifier (sent by the frontend) to the matching Turnstile secret key.
-// Currently only the Edu Pab (Grade 5 Scholarship) site uses this check.
-function getSecretForSite(site) {
-  const secrets = {
-    edupab: process.env.TURNSTILE_SECRET_KEY_EDUPAB
-  };
-  return secrets[site];
-}
-
-async function verifyTurnstile(token, remoteip, site) {
-  const secret = getSecretForSite(site);
+async function verifyTurnstile(token, remoteip) {
+  const secret = process.env.TURNSTILE_SECRET_KEY_EDUPAB;
   if (!secret || !token) return false;
 
   const body = new URLSearchParams();
@@ -78,20 +69,15 @@ exports.handler = async function (event) {
   }
 
   // ---- Human verification (Cloudflare Turnstile) ----
-  // Only the Edu Pab (Grade 5 Scholarship) site requires this check for now.
-  // Ganitha Hapannu's own contact form sends no "site" field, so it's skipped here.
-  const site = (data.site || "ganithahapannu").toString();
-  if (site === "edupab") {
-    const turnstileToken = (data.turnstileToken || "").toString();
-    const remoteip = event.headers["x-nf-client-connection-ip"] || event.headers["client-ip"];
-    const isHuman = await verifyTurnstile(turnstileToken, remoteip, site);
-    if (!isHuman) {
-      return {
-        statusCode: 403,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ error: "Human verification failed" })
-      };
-    }
+  const turnstileToken = (data.turnstileToken || "").toString();
+  const remoteip = event.headers["x-nf-client-connection-ip"] || event.headers["client-ip"];
+  const isHuman = await verifyTurnstile(turnstileToken, remoteip);
+  if (!isHuman) {
+    return {
+      statusCode: 403,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ error: "Human verification failed" })
+    };
   }
 
   const name = (data.name || "").toString().trim().slice(0, 200);
