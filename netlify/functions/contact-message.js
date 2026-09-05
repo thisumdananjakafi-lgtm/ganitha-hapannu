@@ -1,7 +1,7 @@
 // netlify/functions/contact-message.js
-// Receives contact form submissions from any Edu Pab site and forwards them to Telegram.
-// CORS is open so this same function can be shared across sub-sites (e.g. the main
-// Edu Pab site, Ganitha Hapannu, etc.) that all want to notify the same bot.
+// Receives contact form submissions from any Edu Pab site, verifies the sender is
+// human via Cloudflare Turnstile (each site can use its own Turnstile widget),
+// then forwards the message to Telegram.
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -9,8 +9,39 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type"
 };
 
+// Map a "site" identifier (sent by the frontend) to the matching Turnstile secret key.
+// Currently only the Edu Pab (Grade 5 Scholarship) site uses this check.
+function getSecretForSite(site) {
+  const secrets = {
+    edupab: process.env.TURNSTILE_SECRET_KEY_EDUPAB
+  };
+  return secrets[site];
+}
+
+async function verifyTurnstile(token, remoteip, site) {
+  const secret = getSecretForSite(site);
+  if (!secret || !token) return false;
+
+  const body = new URLSearchParams();
+  body.append("secret", secret);
+  body.append("response", token);
+  if (remoteip) body.append("remoteip", remoteip);
+
+  try {
+    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body
+    });
+    const data = await res.json();
+    return data.success === true;
+  } catch (err) {
+    console.error("Turnstile verification error:", err);
+    return false;
+  }
+}
+
 exports.handler = async function (event) {
-  // Handle CORS preflight
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 204, headers: CORS_HEADERS, body: "" };
   }
@@ -46,6 +77,23 @@ exports.handler = async function (event) {
     };
   }
 
+  // ---- Human verification (Cloudflare Turnstile) ----
+  // Only the Edu Pab (Grade 5 Scholarship) site requires this check for now.
+  // Ganitha Hapannu's own contact form sends no "site" field, so it's skipped here.
+  const site = (data.site || "ganithahapannu").toString();
+  if (site === "edupab") {
+    const turnstileToken = (data.turnstileToken || "").toString();
+    const remoteip = event.headers["x-nf-client-connection-ip"] || event.headers["client-ip"];
+    const isHuman = await verifyTurnstile(turnstileToken, remoteip, site);
+    if (!isHuman) {
+      return {
+        statusCode: 403,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ error: "Human verification failed" })
+      };
+    }
+  }
+
   const name = (data.name || "").toString().trim().slice(0, 200);
   const message = (data.message || "").toString().trim().slice(0, 2000);
   const time = (data.time || new Date().toISOString()).toString();
@@ -59,7 +107,6 @@ exports.handler = async function (event) {
     };
   }
 
-  // Escape basic HTML special chars for Telegram HTML parse mode
   const escapeHtml = (str) =>
     str
       .replace(/&/g, "&amp;")
