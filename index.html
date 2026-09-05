@@ -379,6 +379,7 @@
 
   ::selection{background:var(--mango); color:var(--ink);}
 </style>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 <div class="bg-waves"></div>
@@ -474,6 +475,7 @@
         <label data-i18n="formMessageLabel">පණිවිඩය</label>
         <textarea id="contactMessage" data-i18n-placeholder="formMessagePlaceholder" placeholder="ඔයාගේ ගැටලුව මෙතන ලියන්න..."></textarea>
       </div>
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAEpV3Iphf2vO15Vq" data-callback="onContactTurnstileToken"></div>
       <button class="btn btn-leaf" style="width:100%" onclick="sendContactMessage()">
         <span data-i18n="sendBtn">📩 එවන්න</span>
       </button>
@@ -703,6 +705,9 @@ document.addEventListener('click', (e)=>{
 });
 
 /* ---- contact form -> Telegram via Netlify function ---- */
+let contactTurnstileToken = '';
+function onContactTurnstileToken(token){ contactTurnstileToken = token; }
+
 async function sendContactMessage(){
   const dict = I18N[currentLang] || I18N.si;
   const name = document.getElementById('contactName').value.trim();
@@ -713,19 +718,26 @@ async function sendContactMessage(){
     statusEl.textContent = dict.needFieldsText;
     return;
   }
+  if(!contactTurnstileToken){
+    statusEl.className = 'contact-status no';
+    statusEl.textContent = 'කරුණාකර verification එක සම්පූර්ණ කරන්න.';
+    return;
+  }
   statusEl.className = 'contact-status pending';
   statusEl.textContent = dict.sendingText;
   try{
     const r = await fetch('/.netlify/functions/contact-message', {
       method:'POST',
       headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ name, message: msg, time: new Date().toISOString() })
+      body: JSON.stringify({ name, message: msg, time: new Date().toISOString(), turnstileToken: contactTurnstileToken })
     });
     if(r.ok){
       statusEl.className = 'contact-status ok';
       statusEl.textContent = dict.sentOkText;
       document.getElementById('contactName').value = '';
       document.getElementById('contactMessage').value = '';
+      if(window.turnstile) window.turnstile.reset();
+      contactTurnstileToken = '';
     }else{
       throw new Error('bad response');
     }
