@@ -1,7 +1,10 @@
 // netlify/functions/contact-message.js
 // Receives contact form submissions from Edu Pab sites, verifies the sender is
 // human via Cloudflare Turnstile (same widget/key shared across sites),
-// then forwards the message to Telegram.
+// forwards the message to Telegram, and — if an email was provided — sends the
+// sender a short thank-you email via Gmail SMTP.
+
+const nodemailer = require("nodemailer");
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -33,6 +36,37 @@ async function verifyTurnstile(token, remoteip) {
   } catch (err) {
     console.error("Turnstile verification error:", err);
     return false;
+  }
+}
+
+// Sends a short thank-you email to whoever filled in the form (best-effort —
+// failure here should never block the Telegram notification going through).
+async function sendThankYouEmail(toEmail, name) {
+  const EMAIL_USER = process.env.EMAIL_USER;
+  const EMAIL_APP_PASSWORD = process.env.EMAIL_APP_PASSWORD;
+  if (!EMAIL_USER || !EMAIL_APP_PASSWORD || !toEmail) return;
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: { user: EMAIL_USER, pass: EMAIL_APP_PASSWORD }
+    });
+
+    await transporter.sendMail({
+      from: `"Edu Pab" <${EMAIL_USER}>`,
+      to: toEmail,
+      subject: "ස්තූතියි! ඔබේ පණිවිඩය අප වෙත ලැබුණා — Edu Pab",
+      text:
+        `ආයුබෝවන් ${name || ""},\n\n` +
+        `ඔබ Edu Pab වෙත එවූ පණිවිඩය අප වෙත ලැබී ඇත. ඉක්මනින්ම අප ඔබ වෙත ප්‍රතිචාර දක්වන්නෙමු.\n\n` +
+        `ස්තූතියි,\nEdu Pab කණ්ඩායම`,
+      html:
+        `<p>ආයුබෝවන් ${name ? name : ""},</p>` +
+        `<p>ඔබ <b>Edu Pab</b> වෙත එවූ පණිවිඩය අප වෙත ලැබී ඇත. ඉක්මනින්ම අප ඔබ වෙත ප්‍රතිචාර දක්වන්නෙමු.</p>` +
+        `<p>ස්තූතියි,<br/>Edu Pab කණ්ඩායම</p>`
+    });
+  } catch (err) {
+    console.error("Thank-you email failed:", err);
   }
 }
 
@@ -85,6 +119,7 @@ exports.handler = async function (event) {
   }
 
   const name = (data.name || "").toString().trim().slice(0, 200);
+  const email = (data.email || "").toString().trim().slice(0, 200);
   const message = (data.message || "").toString().trim().slice(0, 2000);
   const time = (data.time || new Date().toISOString()).toString();
   const source = (data.source || "Ganitha Hapannu").toString().trim().slice(0, 120);
@@ -107,6 +142,7 @@ exports.handler = async function (event) {
     `📩 <b>Edu Pab — New Contact Message</b>\n` +
     `<b>From:</b> ${escapeHtml(source)}\n\n` +
     `<b>Name:</b> ${escapeHtml(name)}\n` +
+    `<b>Email:</b> ${escapeHtml(email || "-")}\n` +
     `<b>Time:</b> ${escapeHtml(time)}\n\n` +
     `<b>Message:</b>\n${escapeHtml(message)}`;
 
@@ -131,6 +167,11 @@ exports.handler = async function (event) {
         headers: CORS_HEADERS,
         body: JSON.stringify({ error: "Failed to send Telegram message" })
       };
+    }
+
+    // Best-effort thank-you email — never blocks the response if it fails.
+    if (email) {
+      await sendThankYouEmail(email, name);
     }
 
     return {
