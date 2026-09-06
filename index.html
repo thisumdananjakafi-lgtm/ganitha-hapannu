@@ -472,6 +472,10 @@
         <input type="text" id="contactName" data-i18n-placeholder="formNamePlaceholder" placeholder="උදා: නිමල් පෙරේරා">
       </div>
       <div class="contact-field">
+        <label data-i18n="formEmailLabel">ඔයාගේ Email එක</label>
+        <input type="email" id="contactEmail" data-i18n-placeholder="formEmailPlaceholder" placeholder="උදා: nimal@gmail.com">
+      </div>
+      <div class="contact-field">
         <label data-i18n="formMessageLabel">පණිවිඩය</label>
         <textarea id="contactMessage" data-i18n-placeholder="formMessagePlaceholder" placeholder="ඔයාගේ ගැටලුව මෙතන ලියන්න..."></textarea>
       </div>
@@ -571,6 +575,8 @@ const I18N = {
     contactIntro:"ගණිත හපන්නු සම්බන්ධ ගැටලුවක්, යෝජනාවක් හෝ දෝෂයක් තියෙනවා නම් පහත ෆෝරමය පුරවන්න. ඔයාගේ පණිවිඩය කෙළින්ම අපිට ලැබෙනවා.",
     formNameLabel:"ඔයාගේ නම",
     formNamePlaceholder:"උදා: නිමල් පෙරේරා",
+    formEmailLabel:"ඔයාගේ Email එක",
+    formEmailPlaceholder:"උදා: nimal@gmail.com",
     formMessageLabel:"පණිවිඩය",
     formMessagePlaceholder:"ඔයාගේ ගැටලුව මෙතන ලියන්න...",
     sendBtn:"📩 එවන්න",
@@ -610,6 +616,8 @@ const I18N = {
     contactIntro:"கணித வீரர்கள் தொடர்பான சிக்கல், பரிந்துரை அல்லது பிழை இருந்தால் கீழே உள்ள படிவத்தை நிரப்பவும். உங்கள் செய்தி நேரடியாக எங்களுக்கு வரும்.",
     formNameLabel:"உங்கள் பெயர்",
     formNamePlaceholder:"உதா: குமார்",
+    formEmailLabel:"உங்கள் மின்னஞ்சல்",
+    formEmailPlaceholder:"உதா: kumar@gmail.com",
     formMessageLabel:"செய்தி",
     formMessagePlaceholder:"உங்கள் சிக்கலை இங்கே எழுதவும்...",
     sendBtn:"📩 அனுப்பு",
@@ -649,6 +657,8 @@ const I18N = {
     contactIntro:"If you have a problem, suggestion, or found a bug related to Math Champs, please fill out the form below. Your message comes straight to us.",
     formNameLabel:"Your name",
     formNamePlaceholder:"e.g. Nimal Perera",
+    formEmailLabel:"Your email",
+    formEmailPlaceholder:"e.g. nimal@gmail.com",
     formMessageLabel:"Message",
     formMessagePlaceholder:"Describe your issue here...",
     sendBtn:"📩 Send",
@@ -711,9 +721,10 @@ function onContactTurnstileToken(token){ contactTurnstileToken = token; }
 async function sendContactMessage(){
   const dict = I18N[currentLang] || I18N.si;
   const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
   const msg = document.getElementById('contactMessage').value.trim();
   const statusEl = document.getElementById('contactStatus');
-  if(!name || !msg){
+  if(!name || !email || !msg){
     statusEl.className = 'contact-status no';
     statusEl.textContent = dict.needFieldsText;
     return;
@@ -729,12 +740,13 @@ async function sendContactMessage(){
     const r = await fetch('/.netlify/functions/contact-message', {
       method:'POST',
       headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ name, message: msg, time: new Date().toISOString(), turnstileToken: contactTurnstileToken })
+      body: JSON.stringify({ name, email, message: msg, time: new Date().toISOString(), source: "Ganitha Hapannu", turnstileToken: contactTurnstileToken })
     });
     if(r.ok){
       statusEl.className = 'contact-status ok';
       statusEl.textContent = dict.sentOkText;
       document.getElementById('contactName').value = '';
+      document.getElementById('contactEmail').value = '';
       document.getElementById('contactMessage').value = '';
       if(window.turnstile) window.turnstile.reset();
       contactTurnstileToken = '';
